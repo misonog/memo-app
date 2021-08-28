@@ -2,7 +2,6 @@
 
 require 'sinatra'
 require 'sinatra/reloader' if development?
-require_relative 'lib/memo'
 
 get '/' do
   @memos = Memo.all
@@ -11,4 +10,16 @@ end
 
 get '/memos/new' do
   erb :new
+end
+
+post '/memos' do
+  @title = params[:title].to_s
+  @content = params[:content]
+  @memo = Memo.new(@title, @content)
+  if @memo.save
+    # TODO: 個別のメモページにリダイレクトするよう修正
+    redirect to('/')
+  else
+    erb :new
+  end
 end
