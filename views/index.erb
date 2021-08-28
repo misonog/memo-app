@@ -1,7 +1,10 @@
+<h1>MemoApp</h1>
 <ul class="users">
   <% @memos.each do |memo| %>
     <li>
-      <%= memo[:title] %>
+      <a href="#"><%= memo[:title] %></a>
     </li>
   <% end %>
 </ul>
+
+<a class="btn btn-primary" href="#" role="button">追加</a>
