@@ -8,3 +8,7 @@ get '/' do
   @memos = Memo.all
   erb :index
 end
+
+get '/memos/new' do
+  erb :new
+end
