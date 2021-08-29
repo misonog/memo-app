@@ -30,6 +30,19 @@ class Memo
     open(PATH, 'w') { |f| JSON.dump(memos, f) }
   end
 
+  def update(title:, content:)
+    memos = Memo.all
+    # each_with_object や select との併用も考えたが、シンプルに対応
+    memos.map! do |m|
+      if m[:id] == @id
+        m[:title] = title
+        m[:content] = content
+      end
+      m
+    end
+    open(PATH, 'w') { |f| JSON.dump(memos, f) }
+  end
+
   private
 
   def create_id

@@ -25,3 +25,17 @@ get '/memos/:id' do
   @memo = Memo.find_by_id(params[:id].to_i)
   erb :show
 end
+
+get '/memos/:id/edit' do
+  @memo = Memo.find_by_id(params[:id].to_i)
+  erb :edit
+end
+
+patch '/memos/:id' do
+  @memo = Memo.find_by_id(params[:id].to_i)
+  if @memo.update(title: params[:title], content: params[:content])
+    redirect to("/memos/#{@memo.id}")
+  else
+    erb :edit
+  end
+end

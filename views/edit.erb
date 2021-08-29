@@ -1,0 +1,12 @@
+<form action=<%= "/memos/#{@memo.id}" %> method="post">
+  <input name="_method" type="hidden" value="patch">
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" name="title" class="form-control" id="title" value=<%= @memo.title %>>
+  </div>
+  <div class="mb-3">
+    <label for="content" class="form-label">Content</label>
+    <textarea name="content" class="form-control" id="content" cols="30" rows="5"><%= @memo.content %></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">変更</button>
+</form>
