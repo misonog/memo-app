@@ -15,9 +15,13 @@ end
 post '/memos' do
   @memo = Memo.new(title: params[:title], content: params[:content])
   if @memo.save
-    # TODO: 個別のメモページにリダイレクトするよう修正
-    redirect to('/')
+    redirect to("/memos/#{@memo.id}")
   else
     erb :new
   end
+end
+
+get '/memos/:id' do
+  @memo = Memo.find_by_id(params[:id].to_i)
+  erb :show
 end

@@ -3,6 +3,7 @@
 require 'json'
 
 class Memo
+  attr_reader :id, :title, :content
   PATH = 'data/memos.json'
 
   def self.all
