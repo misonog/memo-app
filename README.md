@@ -1,6 +1,6 @@
 # Memo app
 
-[Sinatra を使って Web アプリケーションの基本を理解する](https://bootcamp.fjord.jp/practices/157)の課題提出用リポジトリです。
+[Sinatra を使って Web アプリケーションの基本を理解する](https://bootcamp.fjord.jp/practices/157) の課題提出用リポジトリです。
 
 ## 利用方法
 
@@ -8,8 +8,7 @@
 
 ```
 $ bundle install
-$ ruby app.rb
+$ rackup -p 4567
 ```
 
 [http://localhost:4567](http://localhost:4567) を開きます。
-
