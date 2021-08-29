@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'erb'
 
 class Memo
+  include ERB::Util
   attr_reader :id, :title, :content
 
   PATH = 'data/memos.json'
@@ -21,8 +23,8 @@ class Memo
 
   def initialize(title:, content:, id: nil)
     @id = id.nil? ? create_id : id
-    @title = title
-    @content = content
+    @title = h(title)
+    @content = h(content)
   end
 
   def save
@@ -36,8 +38,8 @@ class Memo
     # each_with_object や select との併用も考えたが、シンプルに対応
     memos.map! do |m|
       if m[:id] == @id
-        m[:title] = title
-        m[:content] = content
+        m[:title] = h(title)
+        m[:content] = h(content)
       end
       m
     end
