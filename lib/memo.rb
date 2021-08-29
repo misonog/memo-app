@@ -11,8 +11,14 @@ class Memo
     end
   end
 
-  def initialize(title, content)
-    @id = create_id
+  def self.find_by_id(id)
+    memos = Memo.all
+    memo = memos.find { |memo| memo[:id] == id }
+    Memo.new(**memo)
+  end
+
+  def initialize(id: nil, title:, content:)
+    @id = id.nil? ? create_id : id
     @title = title
     @content = content
   end
