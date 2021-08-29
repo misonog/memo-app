@@ -27,7 +27,7 @@ class Memo
   def save
     memos = Memo.all
     memos << { id: @id, title: @title, content: @content }
-    open(PATH, 'w') { |f| JSON.dump(memos, f) }
+    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
   end
 
   def update(title:, content:)
@@ -40,12 +40,12 @@ class Memo
       end
       m
     end
-    open(PATH, 'w') { |f| JSON.dump(memos, f) }
+    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
   end
 
   def destroy
     memos = Memo.all.delete_if { |m| m[:id] == @id }
-    open(PATH, 'w') { |f| JSON.dump(memos, f) }
+    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
   end
 
   private
