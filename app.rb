@@ -39,3 +39,8 @@ patch '/memos/:id' do
     erb :edit
   end
 end
+
+delete '/memos/:id' do
+  Memo.find_by_id(params[:id].to_i).destroy
+  redirect to('/')
+end

@@ -43,6 +43,11 @@ class Memo
     open(PATH, 'w') { |f| JSON.dump(memos, f) }
   end
 
+  def destroy
+    memos = Memo.all.delete_if { |m| m[:id] == @id }
+    open(PATH, 'w') { |f| JSON.dump(memos, f) }
+  end
+
   private
 
   def create_id
