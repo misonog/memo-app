@@ -4,6 +4,7 @@ require 'json'
 
 class Memo
   attr_reader :id, :title, :content
+
   PATH = 'data/memos.json'
 
   def self.all
@@ -14,11 +15,11 @@ class Memo
 
   def self.find_by_id(id)
     memos = Memo.all
-    memo = memos.find { |memo| memo[:id] == id }
+    memo = memos.find { |m| m[:id] == id }
     Memo.new(**memo)
   end
 
-  def initialize(id: nil, title:, content:)
+  def initialize(title:, content:, id: nil)
     @id = id.nil? ? create_id : id
     @title = title
     @content = content
