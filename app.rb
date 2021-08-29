@@ -13,9 +13,7 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  @title = params[:title].to_s
-  @content = params[:content]
-  @memo = Memo.new(@title, @content)
+  @memo = Memo.new(title: params[:title], content: params[:content])
   if @memo.save
     # TODO: 個別のメモページにリダイレクトするよう修正
     redirect to('/')
