@@ -9,8 +9,6 @@ class Memo
   include ERB::Util
   attr_reader :id, :title, :content
 
-  PATH = 'data/memos.json'
-
   def self.connect_db(conf_path)
     dbconf = YAML.safe_load(ERB.new(File.read(conf_path)).result)['db']
     @@conn = PG.connect(dbconf)
@@ -41,7 +39,6 @@ class Memo
   end
 
   def destroy
-    memos = Memo.all.delete_if { |m| m[:id] == @id }
-    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
+    @@conn.exec('DELETE FROM memos WHERE id = $1', [@id])
   end
 end
