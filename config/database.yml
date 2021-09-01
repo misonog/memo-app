@@ -1,0 +1,6 @@
+db:
+  host: localhost
+  user: <%= ENV['SINATRA_DATABASE_USER'] %>
+  password: <%= ENV['SINATRA_DATABASE_PASSWORD'] %>
+  dbname: memodb
+  port: 5432

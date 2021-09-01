@@ -2,6 +2,8 @@
 
 require 'json'
 require 'erb'
+require 'pg'
+require 'yaml'
 
 class Memo
   include ERB::Util
@@ -9,10 +11,13 @@ class Memo
 
   PATH = 'data/memos.json'
 
+  def self.connect_db(conf_path)
+    dbconf = YAML.safe_load(ERB.new(File.read(conf_path)).result)['db']
+    @conn = PG.connect(dbconf)
+  end
+
   def self.all
-    File.open(PATH) do |f|
-      JSON.parse(f.read, symbolize_names: true) # load を利用すると Rubocop の警告がでるため、文字列として読み込み、parse する
-    end
+    @conn.exec('SELECT * FROM memos')
   end
 
   def self.find_by_id(id)
