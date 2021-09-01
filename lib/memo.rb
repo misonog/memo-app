@@ -13,29 +13,27 @@ class Memo
 
   def self.connect_db(conf_path)
     dbconf = YAML.safe_load(ERB.new(File.read(conf_path)).result)['db']
-    @conn = PG.connect(dbconf)
+    @@conn = PG.connect(dbconf)
   end
 
   def self.all
-    @conn.exec('SELECT * FROM memos')
+    @@conn.exec('SELECT * FROM memos')
   end
 
   def self.find_by_id(id)
-    memos = Memo.all
-    memo = memos.find { |m| m[:id] == id }
-    Memo.new(**memo)
+    result = @@conn.exec('SELECT * FROM memos WHERE id = $1', [id]).first
+    Memo.new(id: result['id'], title: result['title'], content: result['content'])
   end
 
   def initialize(title:, content:, id: nil)
-    @id = id.nil? ? create_id : id
+    @id = id
     @title = h(title)
     @content = h(content)
   end
 
   def save
-    memos = Memo.all
-    memos << { id: @id, title: @title, content: @content }
-    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
+    @@conn.exec('INSERT INTO memos (title, content) VALUES ($1, $2)', [@title, @content])
+    @id = @@conn.exec('SELECT LASTVAL()').getvalue(0, 0)
   end
 
   def update(title:, content:)
@@ -54,13 +52,5 @@ class Memo
   def destroy
     memos = Memo.all.delete_if { |m| m[:id] == @id }
     File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
-  end
-
-  private
-
-  def create_id
-    memos = Memo.all
-    memos.sort_by! { |memo| memo[:id] }
-    memos.last[:id] + 1
   end
 end
