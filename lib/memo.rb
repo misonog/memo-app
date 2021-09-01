@@ -37,16 +37,7 @@ class Memo
   end
 
   def update(title:, content:)
-    memos = Memo.all
-    # each_with_object や select との併用も考えたが、シンプルに対応
-    memos.map! do |m|
-      if m[:id] == @id
-        m[:title] = h(title)
-        m[:content] = h(content)
-      end
-      m
-    end
-    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
+    @@conn.exec('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, @id])
   end
 
   def destroy
