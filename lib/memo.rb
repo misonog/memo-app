@@ -15,7 +15,7 @@ class Memo
   end
 
   def self.all
-    @@conn.exec('SELECT * FROM memos')
+    @@conn.exec('SELECT * FROM memos ORDER BY id')
   end
 
   def self.find_by_id(id)
