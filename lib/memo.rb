@@ -38,8 +38,8 @@ class Memo
     # each_with_object や select との併用も考えたが、シンプルに対応
     memos.map! do |m|
       if m[:id] == @id
-        m[:title] = h(title)
-        m[:content] = h(content)
+        m[:title] = title
+        m[:content] = content
       end
       m
     end
