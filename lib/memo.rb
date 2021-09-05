@@ -17,7 +17,8 @@ class Memo
 
   def self.find_by_id(id)
     memos = Memo.all
-    memo = memos.find { |m| m[:id] == id }
+    ifnone = proc { raise Sinatra::NotFound }
+    memo = memos.find(ifnone) { |m| m[:id] == id }
     Memo.new(**memo)
   end
 
