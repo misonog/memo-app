@@ -1,0 +1,13 @@
+<div class="card" style="width: 36rem;">
+  <div class="card-body">
+    <h2 class="card-title"><%= ERB::Util.h(@memo.title) %></h2>
+    <p class="card-text"><%= ERB::Util.h(@memo.content) %></p>
+    <div class="btn-toolbar">
+      <a href=<%= "/memos/#{@memo.id}/edit" %> role="button" class="btn btn-primary">変更</a>
+      <form action=<%= "/memos/#{@memo.id}" %> method="post">
+        <input type="hidden" name="_method" value="delete">
+        <button type="submit" class="btn btn-danger ms-1">削除</button>
+      </form>
+    </div>
+  </div>
+</div>

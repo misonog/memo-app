@@ -1,0 +1,9 @@
+<ul class="users">
+  <% @memos.each do |memo| %>
+    <li>
+      <a href=<%= "/memos/#{memo[:id]}" %>><%= ERB::Util.h(memo[:title]) %></a>
+    </li>
+  <% end %>
+</ul>
+
+<a class="btn btn-primary" href="/memos/new" role="button">追加</a>
