@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require 'sinatra/reloader' if development?
 
 get '/' do
   @memos = Memo.all
@@ -43,4 +42,8 @@ end
 delete '/memos/:id' do
   Memo.find_by_id(params[:id].to_i).destroy
   redirect to('/')
+end
+
+not_found do
+  '404 not found'
 end
