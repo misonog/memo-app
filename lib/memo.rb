@@ -15,7 +15,7 @@ class Memo
   end
 
   def self.all
-    @@conn.exec('SELECT * FROM memos ORDER BY id')
+    @@conn.exec('SELECT * FROM memos ORDER BY id').map { |memo| Memo.new(title: memo['title'], content: memo['content'], id: memo['id']) }
   end
 
   def self.find_by_id(id)
