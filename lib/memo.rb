@@ -29,7 +29,7 @@ class Memo
     @content = h(content)
   end
 
-  def save
+  def create
     @@conn.exec('INSERT INTO memos (title, content) VALUES ($1, $2)', [@title, @content])
     @id = @@conn.exec('SELECT LASTVAL()').getvalue(0, 0)
   end
