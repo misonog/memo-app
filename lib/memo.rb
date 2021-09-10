@@ -2,61 +2,43 @@
 
 require 'json'
 require 'erb'
+require 'pg'
+require 'yaml'
 
 class Memo
   include ERB::Util
   attr_reader :id, :title, :content
 
-  PATH = 'data/memos.json'
+  def self.connect_db(conf_path)
+    dbconf = YAML.safe_load(ERB.new(File.read(conf_path)).result)['db']
+    @@conn = PG.connect(dbconf)
+  end
 
   def self.all
-    File.open(PATH) do |f|
-      JSON.parse(f.read, symbolize_names: true) # load を利用すると Rubocop の警告がでるため、文字列として読み込み、parse する
-    end
+    @@conn.exec('SELECT * FROM memos ORDER BY id').map { |memo| Memo.new(title: memo['title'], content: memo['content'], id: memo['id']) }
   end
 
   def self.find_by_id(id)
-    memos = Memo.all
-    ifnone = proc { raise Sinatra::NotFound }
-    memo = memos.find(ifnone) { |m| m[:id] == id }
-    Memo.new(**memo)
+    result = @@conn.exec('SELECT * FROM memos WHERE id = $1', [id]).first
+    Memo.new(id: result['id'], title: result['title'], content: result['content'])
   end
 
   def initialize(title:, content:, id: nil)
-    @id = id.nil? ? create_id : id
+    @id = id
     @title = h(title)
     @content = h(content)
   end
 
-  def save
-    memos = Memo.all
-    memos << { id: @id, title: @title, content: @content }
-    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
+  def create
+    @@conn.exec('INSERT INTO memos (title, content) VALUES ($1, $2)', [@title, @content])
+    @id = @@conn.exec('SELECT LASTVAL()').getvalue(0, 0)
   end
 
   def update(title:, content:)
-    memos = Memo.all
-    # each_with_object や select との併用も考えたが、シンプルに対応
-    memos.map! do |m|
-      if m[:id] == @id
-        m[:title] = title
-        m[:content] = content
-      end
-      m
-    end
-    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
+    @@conn.exec('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, @id])
   end
 
   def destroy
-    memos = Memo.all.delete_if { |m| m[:id] == @id }
-    File.open(PATH, 'w') { |f| JSON.dump(memos, f) }
-  end
-
-  private
-
-  def create_id
-    memos = Memo.all
-    memos.sort_by! { |memo| memo[:id] }
-    memos.last[:id] + 1
+    @@conn.exec('DELETE FROM memos WHERE id = $1', [@id])
   end
 end

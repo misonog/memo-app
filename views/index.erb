@@ -1,7 +1,7 @@
 <ul class="users">
   <% @memos.each do |memo| %>
     <li>
-      <a href=<%= "/memos/#{memo[:id]}" %>><%= ERB::Util.h(memo[:title]) %></a>
+      <a href=<%= "/memos/#{memo.id}" %>><%= ERB::Util.h(memo.title) %></a>
     </li>
   <% end %>
 </ul>

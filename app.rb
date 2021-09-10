@@ -13,7 +13,7 @@ end
 
 post '/memos' do
   @memo = Memo.new(title: params[:title], content: params[:content])
-  if @memo.save
+  if @memo.create
     redirect to("/memos/#{@memo.id}")
   else
     erb :new
